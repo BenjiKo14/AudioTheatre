@@ -88,39 +88,121 @@
 }
 
 /* ══════════════════════════════════════
-   ADAPTATIONS VISUELLES PAR SLOT
+   ADAPTATIONS PAR SLOT
+   Base = row layout. On ajuste tailles et visibilité.
+   Hauteur = max(icon, body) → pas de cumul vertical.
 ══════════════════════════════════════ */
 
-/* ── prev2 / next2 : ligne horizontale compacte ── */
-.rv-slot--prev2 .cue-card,
-.rv-slot--next2 .cue-card,
-.rv-slot--prev2 .scene-card,
-.rv-slot--next2 .scene-card {
-  flex-direction: row;
-  justify-content: flex-start;
+/* ─────────────────────────────────────
+   CURRENT (~210px disponible)
+   Row layout → hauteur dictée par le body (title+note+progress)
+   Beaucoup d'espace : gros icon + texte lisible + progress
+───────────────────────────────────── */
+.rv-slot--current .cue-card {
+  padding: 12px 16px;
+  gap: 14px;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-3);
+}
+.rv-slot--current .cue-card__pictogram {
+  font-size: 48px;
+  width: 60px;
+  height: 60px;
+}
+.rv-slot--current .cue-card__body {
+  gap: 6px;
+}
+.rv-slot--current .cue-card__title {
+  font-size: 22px;
+  line-height: 1.2;
+}
+.rv-slot--current .cue-card__note {
+  font-size: 15px;
+}
+/* Le bouton est dans .cue-card__bottom, taille plus grande pour current */
+.rv-slot--current .cue-card__play-btn {
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+}
+
+/* ─────────────────────────────────────
+   PREV / NEXT (~130px)
+   Icon moyen, titre + note visibles, btn au hover
+───────────────────────────────────── */
+.rv-slot--prev .cue-card,
+.rv-slot--next .cue-card {
+  padding: 8px 12px;
+  gap: 10px;
+}
+.rv-slot--prev .cue-card__pictogram,
+.rv-slot--next .cue-card__pictogram {
+  font-size: 32px;
+  width: 42px;
+  height: 42px;
+}
+.rv-slot--prev .cue-card__title,
+.rv-slot--next .cue-card__title {
+  font-size: 15px;
+}
+.rv-slot--prev .cue-card__note,
+.rv-slot--next .cue-card__note {
+  font-size: 13px;
+}
+/* Bouton play visible seulement au hover */
+.rv-slot--prev .cue-card__play-btn,
+.rv-slot--next .cue-card__play-btn {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.rv-slot--prev:hover .cue-card__play-btn,
+.rv-slot--next:hover .cue-card__play-btn {
+  opacity: 1;
+}
+/* Scene cards prev/next */
+.rv-slot--prev .scene-card__watch-for,
+.rv-slot--next .scene-card__watch-for,
+.rv-slot--prev .scene-card__hint,
+.rv-slot--next .scene-card__hint {
+  display: none;
+}
+
+/* ─────────────────────────────────────
+   PREV2 / NEXT2 (~85px)
+   Déjà en row. Icon petit + titre seulement.
+───────────────────────────────────── */
+.rv-slot--prev2 .cue-card,
+.rv-slot--next2 .cue-card {
+  padding: 6px 12px;
+  gap: 8px;
 }
 .rv-slot--prev2 .cue-card__pictogram,
 .rv-slot--next2 .cue-card__pictogram {
   font-size: 18px;
   width: 24px;
   height: 24px;
-  flex-shrink: 0;
 }
 .rv-slot--prev2 .cue-card__title,
 .rv-slot--next2 .cue-card__title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  text-align: left;
+  font-size: 12px;
 }
+/* Masquer note, progress, play btn sur prev2/next2 */
 .rv-slot--prev2 .cue-card__note,
 .rv-slot--next2 .cue-card__note,
 .rv-slot--prev2 .cue-card__missing-badge,
 .rv-slot--next2 .cue-card__missing-badge,
 .rv-slot--prev2 .cue-card__play-btn,
 .rv-slot--next2 .cue-card__play-btn,
+.rv-slot--prev2 .cue-card__progress,
+.rv-slot--next2 .cue-card__progress {
+  display: none;
+}
+/* Scene prev2/next2 */
+.rv-slot--prev2 .scene-card,
+.rv-slot--next2 .scene-card {
+  flex-direction: row;
+  padding: 6px 12px;
+  gap: 8px;
+}
 .rv-slot--prev2 .scene-card__description,
 .rv-slot--next2 .scene-card__description,
 .rv-slot--prev2 .scene-card__watch-for,
@@ -133,49 +215,8 @@
 }
 .rv-slot--prev2 .scene-card__title,
 .rv-slot--next2 .scene-card__title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-}
-
-/* ── prev / next : taille intermédiaire ── */
-.rv-slot--prev .cue-card,
-.rv-slot--next .cue-card {
-  padding: var(--space-2) var(--space-4);
-  gap: var(--space-2);
-}
-.rv-slot--prev .cue-card__pictogram,
-.rv-slot--next .cue-card__pictogram {
-  font-size: 28px;
-  width: 40px;
-  height: 40px;
-}
-.rv-slot--prev .cue-card__title,
-.rv-slot--next .cue-card__title {
-  font-size: var(--font-size-base);
-}
-.rv-slot--prev .cue-card__note,
-.rv-slot--next .cue-card__note {
-  font-size: var(--font-size-sm);
-}
-/* Bouton play visible seulement au hover sur prev/next */
-.rv-slot--prev .cue-card__play-btn,
-.rv-slot--next .cue-card__play-btn {
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-.rv-slot--prev:hover .cue-card__play-btn,
-.rv-slot--next:hover .cue-card__play-btn {
-  opacity: 1;
-}
-.rv-slot--prev .scene-card__watch-for,
-.rv-slot--next .scene-card__watch-for,
-.rv-slot--prev .scene-card__hint,
-.rv-slot--next .scene-card__hint {
-  display: none;
-}
-.rv-slot--prev .scene-card__title,
-.rv-slot--next .scene-card__title {
-  font-size: var(--font-size-base);
+  font-size: 12px;
+  text-align: left;
 }
 
 /* Setlist vide */

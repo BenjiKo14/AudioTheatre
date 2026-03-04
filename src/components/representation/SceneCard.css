@@ -2,96 +2,104 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-6);
+  gap: 6px;
+  padding: 8px 12px;
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-scene-border);
   text-align: center;
+  overflow: hidden;
   transition: opacity var(--transition-normal);
 }
 
 /* ── Variantes de position ── */
-.scene-card--current {
-  border-color: var(--color-scene-border);
-}
-
-.scene-card--prev2 {
-  opacity: 0.22;
-  border-color: var(--color-border-subtle);
-}
-
-.scene-card--prev {
-  opacity: var(--cue-prev-opacity);
-  border-color: var(--color-border-subtle);
-}
-
-.scene-card--next {
-  opacity: var(--cue-next-opacity);
-  border-color: var(--color-border-subtle);
-}
-
-.scene-card--next2 {
-  opacity: 0.3;
-  border-color: var(--color-border-subtle);
-}
+.scene-card--current { border-color: var(--color-scene-border); }
+.scene-card--prev2   { opacity: 0.22; border-color: var(--color-border-subtle); }
+.scene-card--prev    { opacity: 0.45; border-color: var(--color-border-subtle); }
+.scene-card--next    { opacity: 0.65; border-color: var(--color-border-subtle); }
+.scene-card--next2   { opacity: 0.30; border-color: var(--color-border-subtle); }
 
 /* ── Badge bleu ── */
 .scene-card__badge {
-  padding: var(--space-1) var(--space-3);
+  padding: 2px 8px;
   background-color: var(--color-scene-muted);
   color: var(--color-scene);
   border: 1px solid var(--color-scene-border);
   border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
+  font-size: 11px;
   font-weight: var(--font-weight-medium);
+  flex-shrink: 0;
 }
 
 /* ── Titre ── */
 .scene-card__title {
-  font-size: var(--font-size-2xl);
+  font-size: 16px;
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  line-height: var(--line-height-tight);
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 
 /* ── Description ── */
 .scene-card__description {
-  font-size: var(--font-size-base);
+  font-size: 13px;
   color: var(--color-text-secondary);
-  line-height: var(--line-height-normal);
+  line-height: 1.4;
   max-width: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* ── WatchFor en ambre ── */
 .scene-card__watch-for {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-3);
+  gap: 3px;
+  padding: 6px 10px;
   background-color: var(--color-accent-muted);
   border: 1px solid var(--color-accent-border);
   border-radius: var(--radius-md);
   width: 100%;
+  flex-shrink: 0;
 }
 
 .scene-card__watch-for-label {
-  font-size: var(--font-size-xs);
+  font-size: 10px;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .scene-card__watch-for-text {
-  font-size: var(--font-size-base);
+  font-size: 13px;
   font-weight: var(--font-weight-medium);
   color: var(--color-accent);
-  line-height: var(--line-height-normal);
+  line-height: 1.3;
 }
 
 /* ── Hint navigation ── */
 .scene-card__hint {
-  font-size: var(--font-size-sm);
+  font-size: 11px;
   color: var(--color-text-muted);
-  margin-top: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ── Taille current (via slot parent) ── */
+.rv-slot--current .scene-card {
+  padding: 12px 16px;
+  gap: 8px;
+}
+.rv-slot--current .scene-card__title {
+  font-size: 20px;
+  white-space: normal;
+}
+.rv-slot--current .scene-card__description {
+  font-size: 14px;
+}
+.rv-slot--current .scene-card__badge {
+  font-size: 12px;
+  padding: 3px 10px;
 }

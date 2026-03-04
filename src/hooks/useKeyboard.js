@@ -1,12 +1,14 @@
 import { useEffect, useRef } from 'react';
 
+const WHEEL_THROTTLE_MS = 300;
+
 /**
- * useKeyboard — Handler clavier global pour le mode représentation.
- * Attache un écouteur `keydown` sur `window` — global, indépendant du focus DOM.
+ * useKeyboard — Handler clavier + molette global pour le mode représentation.
+ * Attache des écouteurs `keydown` et `wheel` sur `window`.
  * Callbacks : onNext, onPrev, onPlay, onStop, onStopAll
  *
- * - ↓ (ArrowDown) : avancer au cue suivant
- * - ↑ (ArrowUp) : reculer au cue précédent
+ * - ↓ (ArrowDown) / molette bas : avancer au cue suivant
+ * - ↑ (ArrowUp)   / molette haut : reculer au cue précédent
  * - Espace (Space) : jouer le son du cue courant
  * - Échap (Escape) : arrêter le son du cue courant
  * - S : arrêt d'urgence (tous les sons)
@@ -17,6 +19,8 @@ export function useKeyboard({ onNext, onPrev, onPlay, onStop, onStopAll }) {
   // Utilisation de refs pour que l'effect n'ait pas à se recréer à chaque render
   const handlers = useRef({ onNext, onPrev, onPlay, onStop, onStopAll });
   handlers.current = { onNext, onPrev, onPlay, onStop, onStopAll };
+
+  const lastWheelRef = useRef(0);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -58,7 +62,24 @@ export function useKeyboard({ onNext, onPrev, onPlay, onStop, onStopAll }) {
       }
     }
 
+    function handleWheel(event) {
+      const tag = event.target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+      const now = Date.now();
+      if (now - lastWheelRef.current < WHEEL_THROTTLE_MS) return;
+      lastWheelRef.current = now;
+
+      const { onNext, onPrev } = handlers.current;
+      if (event.deltaY > 0) onNext?.();
+      else if (event.deltaY < 0) onPrev?.();
+    }
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+    };
   }, []); // Pas de dépendances — les handlers sont dans la ref
 }

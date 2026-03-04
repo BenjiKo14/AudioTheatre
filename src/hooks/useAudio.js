@@ -158,6 +158,7 @@ export function useAudio(cues, dispatch) {
         const filtered = list.filter(item => item.node !== node);
         if (filtered.length === 0) {
           activeNodes.current.delete(id);
+          dispatch?.({ type: 'STOP_CUE', payload: { id } });
         } else {
           activeNodes.current.set(id, filtered);
         }

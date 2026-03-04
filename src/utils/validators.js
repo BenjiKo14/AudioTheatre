@@ -43,10 +43,10 @@ export function validateConfig(config) {
     if (cue.type === 'audio' && cue.audioFile !== undefined && typeof cue.audioFile !== 'string') {
       errors.push(`cues[${index}]: "audioFile" doit être une string`);
     }
-    if (cue.trimStart !== undefined && (typeof cue.trimStart !== 'number' || cue.trimStart < 0)) {
+    if (cue.trimStart != null && (typeof cue.trimStart !== 'number' || cue.trimStart < 0)) {
       errors.push(`cues[${index}]: "trimStart" doit être un nombre positif`);
     }
-    if (cue.trimEnd !== undefined && (typeof cue.trimEnd !== 'number' || cue.trimEnd < 0)) {
+    if (cue.trimEnd != null && (typeof cue.trimEnd !== 'number' || cue.trimEnd < 0)) {
       errors.push(`cues[${index}]: "trimEnd" doit être un nombre positif`);
     }
   });

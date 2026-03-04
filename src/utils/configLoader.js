@@ -59,7 +59,12 @@ export async function writeConfig(cues) {
   const { writeTextFile, BaseDirectory } = await import('@tauri-apps/plugin-fs');
 
   // audioMissing est un état runtime — ne jamais le persister
-  const cleanCues = cues.map(({ audioMissing: _, ...cue }) => cue);
+  // trimStart/trimEnd null = non défini, on les exclut
+  const cleanCues = cues.map(({ audioMissing: _, ...cue }) => {
+    if (cue.trimStart == null) delete cue.trimStart;
+    if (cue.trimEnd == null) delete cue.trimEnd;
+    return cue;
+  });
 
   const config = {
     version: 1,
