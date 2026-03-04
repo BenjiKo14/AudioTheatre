@@ -85,7 +85,7 @@ export default function RepresentationView() {
                           cue={cue}
                           variant={variant}
                           isPlaying={isPlaying}
-                          progress={audio.getProgress(cue.id)}
+                          progress={{ elapsed: audio.getProgress(cue.id)?.elapsed ?? 0, duration: audio.getProgress(cue.id)?.duration ?? audio.getDuration(cue.id) }}
                           onPlay={() => {
                             if (offset !== 0) dispatch({ type: 'SET_CURRENT_INDEX', payload: idx });
                             if (!cue.audioMissing) {

@@ -211,6 +211,19 @@ export function useAudio(cues, dispatch) {
   }, []);
 
   /**
+   * Retourne la durée effective du cue (id) depuis le buffer préchargé,
+   * en tenant compte du trim. Retourne 0 si le buffer n'est pas encore chargé.
+   */
+  const getDuration = useCallback((id) => {
+    const buffer = audioBuffers.current.get(id);
+    if (!buffer) return 0;
+    const cue = cuesRef.current.find(c => c.id === id);
+    const offset = cue?.trimStart ?? 0;
+    const trimEnd = cue?.trimEnd ?? null;
+    return trimEnd != null ? trimEnd - offset : buffer.duration - offset;
+  }, []);
+
+  /**
    * Retourne la progression du cue (id) : { elapsed, duration } ou null.
    */
   const getProgress = useCallback((id) => {
@@ -227,7 +240,7 @@ export function useAudio(cues, dispatch) {
     };
   }, []);
 
-  return { play, stop, stopAll, isPlaying, getProgress, missingFiles };
+  return { play, stop, stopAll, isPlaying, getProgress, getDuration, missingFiles };
 }
 
 /**
