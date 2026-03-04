@@ -1,0 +1,160 @@
+.config-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+/* ── En-tête ── */
+.config-view__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  gap: var(--space-4);
+}
+
+.config-view__title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.config-view__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.config-view__dirty-indicator {
+  font-size: var(--font-size-sm);
+  color: var(--color-warning);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── Corps ── */
+.config-view__body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Panneau gauche ── */
+.config-view__left {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.config-view__add-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ── Panneau droit ── */
+.config-view__right {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+  min-width: 0;
+}
+
+.config-view__empty-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+/* ── Boutons ── */
+.config-view__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  text-align: center;
+}
+
+.config-view__btn:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.config-view__btn--preview {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+.config-view__btn--preview:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.config-view__btn--save {
+  background-color: var(--color-success);
+  color: var(--color-bg);
+}
+.config-view__btn--save:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.config-view__btn--save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.config-view__btn--import {
+  background-color: var(--color-surface-overlay);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+.config-view__btn--import:hover {
+  background-color: var(--color-surface-raised);
+}
+
+.config-view__error-indicator {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+  font-weight: var(--font-weight-medium);
+}
+
+.config-view__btn--add {
+  background-color: var(--color-accent-muted);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-border);
+  width: 100%;
+}
+.config-view__btn--add:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.config-view__btn--add-scene {
+  background-color: var(--color-scene-muted);
+  color: var(--color-scene);
+  border: 1px solid var(--color-scene-border);
+  width: 100%;
+}
+.config-view__btn--add-scene:hover {
+  background-color: var(--color-scene);
+  color: var(--color-bg);
+}

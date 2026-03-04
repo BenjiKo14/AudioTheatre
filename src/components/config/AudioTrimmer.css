@@ -1,0 +1,224 @@
+.audio-trimmer {
+  padding: var(--space-4);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.audio-trimmer--loading {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* ── En-tête ── */
+.audio-trimmer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.audio-trimmer__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.audio-trimmer__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.audio-trimmer__reset {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.audio-trimmer__reset:hover {
+  color: var(--color-text-secondary);
+}
+
+.audio-trimmer__play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-accent-muted);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.audio-trimmer__play-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.audio-trimmer__play-btn--playing {
+  background: var(--color-surface-overlay);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+.audio-trimmer__play-btn--playing:hover {
+  background: var(--color-danger-muted);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+/* ── Barre de timeline ── */
+.audio-trimmer__bar-area {
+  padding: var(--space-5) 0 var(--space-3);
+}
+
+.audio-trimmer__bar {
+  position: relative;
+  height: 20px;
+  border-radius: 10px;
+  overflow: visible;
+  background: var(--color-surface-overlay);
+  cursor: default;
+  user-select: none;
+}
+
+.audio-trimmer__region {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.audio-trimmer__region--inactive {
+  background: var(--color-surface-overlay);
+  border-radius: 10px;
+}
+
+.audio-trimmer__region--active {
+  background: var(--color-accent-muted);
+  border-top: 1px solid var(--color-accent-border);
+  border-bottom: 1px solid var(--color-accent-border);
+}
+
+/* ── Curseur de lecture ── */
+.audio-trimmer__cursor {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: white;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* ── Handles de drag ── */
+.audio-trimmer__handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 32px;
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+  cursor: ew-resize;
+  z-index: 2;
+  box-shadow: var(--shadow-md);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-trimmer__handle:hover {
+  background: var(--color-accent-hover);
+  transform: translate(-50%, -50%) scaleY(1.1);
+}
+
+/* Lignes de poignée */
+.audio-trimmer__handle::after {
+  content: '';
+  display: block;
+  width: 2px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 1px;
+  box-shadow: -3px 0 0 rgba(0, 0, 0, 0.35), 3px 0 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ── Inputs de temps ── */
+.audio-trimmer__inputs {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.audio-trimmer__time-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.audio-trimmer__time-field--end {
+  align-items: flex-end;
+}
+
+.audio-trimmer__time-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.audio-trimmer__time-input {
+  width: 76px;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  transition: border-color var(--transition-fast);
+}
+
+.audio-trimmer__time-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--focus-ring);
+}
+
+.audio-trimmer__total {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  padding-bottom: var(--space-1);
+}
+
+.audio-trimmer__elapsed {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}

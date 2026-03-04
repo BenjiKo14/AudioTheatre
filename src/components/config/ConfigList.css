@@ -1,0 +1,96 @@
+.config-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.config-list__empty {
+  padding: var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.config-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--touch-target);
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  transition: background-color var(--transition-fast);
+}
+
+.config-list__item:hover {
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+.config-list__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.config-list__item--audio.config-list__item--selected {
+  border-left-color: var(--color-accent);
+  background-color: var(--color-accent-muted);
+  color: var(--color-accent);
+}
+
+.config-list__item--scene.config-list__item--selected {
+  border-left-color: var(--color-scene);
+  background-color: var(--color-scene-muted);
+  color: var(--color-scene);
+}
+
+.config-list__item-index {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  min-width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.config-list__item-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.config-list__item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.config-list__item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--font-weight-medium);
+}
+
+.config-list__item-untitled {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.config-list__item-type {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.config-list__item-warning {
+  color: var(--color-warning);
+  flex-shrink: 0;
+}

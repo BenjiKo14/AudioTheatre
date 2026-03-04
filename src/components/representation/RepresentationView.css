@@ -1,0 +1,323 @@
+/* ── RepresentationView layout ── */
+.representation-view {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+.representation-view__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ══════════════════════════════════════
+   RUNWAY — 5 slots verticaux
+   Proportions: prev2·prev·CURRENT·next·next2
+══════════════════════════════════════ */
+.representation-view__runway {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  gap: var(--space-2);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Animations de transition ──────── */
+@keyframes rv-slide-next {
+  from { transform: translateY(-10px); opacity: 0.55; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+@keyframes rv-slide-prev {
+  from { transform: translateY(10px);  opacity: 0.55; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+.rv-anim--next { animation: rv-slide-next 170ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.rv-anim--prev { animation: rv-slide-prev 170ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+
+/* ── Slots ─────────────────────────── */
+.rv-slot {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: flex 120ms ease;
+}
+
+/* Les cartes remplissent leur slot */
+.rv-slot .cue-card,
+.rv-slot .scene-card {
+  height: 100%;
+}
+
+/* Slots cliquables (prev, next, prev2, next2) */
+.rv-slot:not(.rv-slot--current):not(.rv-slot--empty) {
+  cursor: pointer;
+}
+.rv-slot:not(.rv-slot--current):not(.rv-slot--empty):hover .cue-card,
+.rv-slot:not(.rv-slot--current):not(.rv-slot--empty):hover .scene-card {
+  background-color: var(--color-surface-overlay);
+}
+
+/* ── Proportions des slots ─────────── */
+/* Réduction du current pour laisser place aux voisins */
+.rv-slot--prev2   { flex: 1.8; }
+.rv-slot--prev    { flex: 2.8; }
+.rv-slot--current { flex: 4.5; }
+.rv-slot--next    { flex: 2.8; }
+.rv-slot--next2   { flex: 1.8; }
+
+/* ── Marqueur barre verticale ambre sur current ── */
+.rv-slot--current::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════
+   ADAPTATIONS VISUELLES PAR SLOT
+══════════════════════════════════════ */
+
+/* ── prev2 / next2 : ligne horizontale compacte ── */
+.rv-slot--prev2 .cue-card,
+.rv-slot--next2 .cue-card,
+.rv-slot--prev2 .scene-card,
+.rv-slot--next2 .scene-card {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+}
+.rv-slot--prev2 .cue-card__pictogram,
+.rv-slot--next2 .cue-card__pictogram {
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.rv-slot--prev2 .cue-card__title,
+.rv-slot--next2 .cue-card__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+}
+.rv-slot--prev2 .cue-card__note,
+.rv-slot--next2 .cue-card__note,
+.rv-slot--prev2 .cue-card__missing-badge,
+.rv-slot--next2 .cue-card__missing-badge,
+.rv-slot--prev2 .cue-card__play-btn,
+.rv-slot--next2 .cue-card__play-btn,
+.rv-slot--prev2 .scene-card__description,
+.rv-slot--next2 .scene-card__description,
+.rv-slot--prev2 .scene-card__watch-for,
+.rv-slot--next2 .scene-card__watch-for,
+.rv-slot--prev2 .scene-card__hint,
+.rv-slot--next2 .scene-card__hint,
+.rv-slot--prev2 .scene-card__badge,
+.rv-slot--next2 .scene-card__badge {
+  display: none;
+}
+.rv-slot--prev2 .scene-card__title,
+.rv-slot--next2 .scene-card__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── prev / next : taille intermédiaire ── */
+.rv-slot--prev .cue-card,
+.rv-slot--next .cue-card {
+  padding: var(--space-2) var(--space-4);
+  gap: var(--space-2);
+}
+.rv-slot--prev .cue-card__pictogram,
+.rv-slot--next .cue-card__pictogram {
+  font-size: 28px;
+  width: 40px;
+  height: 40px;
+}
+.rv-slot--prev .cue-card__title,
+.rv-slot--next .cue-card__title {
+  font-size: var(--font-size-base);
+}
+.rv-slot--prev .cue-card__note,
+.rv-slot--next .cue-card__note {
+  font-size: var(--font-size-sm);
+}
+/* Bouton play visible seulement au hover sur prev/next */
+.rv-slot--prev .cue-card__play-btn,
+.rv-slot--next .cue-card__play-btn {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.rv-slot--prev:hover .cue-card__play-btn,
+.rv-slot--next:hover .cue-card__play-btn {
+  opacity: 1;
+}
+.rv-slot--prev .scene-card__watch-for,
+.rv-slot--next .scene-card__watch-for,
+.rv-slot--prev .scene-card__hint,
+.rv-slot--next .scene-card__hint {
+  display: none;
+}
+.rv-slot--prev .scene-card__title,
+.rv-slot--next .scene-card__title {
+  font-size: var(--font-size-base);
+}
+
+/* Setlist vide */
+.representation-view__empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+/* ══════════════════════════════════════
+   BANDE LIVE TRACKS
+══════════════════════════════════════ */
+.live-tracks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-4);
+  height: 52px;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.live-tracks__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.live-tracks__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-danger);
+  animation: live-pulse 1.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.7); }
+}
+
+.live-tracks__label {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-danger);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.live-tracks__count {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 1px 6px;
+}
+
+.live-tracks__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  overflow-x: auto;
+  height: 100%;
+  scrollbar-width: none;
+}
+.live-tracks__list::-webkit-scrollbar { display: none; }
+
+.live-track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+  height: 34px;
+  min-width: 220px;
+  flex-shrink: 0;
+}
+
+.live-track__icon  { font-size: 15px; flex-shrink: 0; line-height: 1; }
+
+.live-track__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-track__bar {
+  width: 80px;
+  height: 3px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.live-track__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), #FCD34D);
+  border-radius: var(--radius-full);
+  transition: width 100ms linear;
+}
+
+.live-track__time {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.live-track__stop {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+.live-track__stop:hover {
+  color: var(--color-danger);
+  background-color: var(--color-danger-muted);
+}
