@@ -3,7 +3,7 @@ import './SceneCard.css';
 /**
  * SceneCard — Carte d'annotation de scène dans la zone téléprompter.
  * Badge bleu "Annotation de scène", titre, description, watchFor en ambre.
- * Hint "→ pour avancer" affiché en bas.
+ * Hint "↓ pour avancer" affiché en bas.
  */
 export default function SceneCard({ cue, variant = 'current' }) {
   const variantClass = `scene-card--${variant}`;
@@ -29,7 +29,7 @@ export default function SceneCard({ cue, variant = 'current' }) {
       )}
 
       {variant === 'current' && (
-        <p className="scene-card__hint">→ pour avancer</p>
+        <p className="scene-card__hint">↓ pour avancer</p>
       )}
     </article>
   );

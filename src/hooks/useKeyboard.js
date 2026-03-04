@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const WHEEL_THROTTLE_MS = 300;
+const WHEEL_THROTTLE_MS = 120;
 
 /**
  * useKeyboard — Handler clavier + molette global pour le mode représentation.
@@ -65,6 +65,9 @@ export function useKeyboard({ onNext, onPrev, onPlay, onStop, onStopAll }) {
     function handleWheel(event) {
       const tag = event.target?.tagName?.toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+      // Ne pas intercepter le scroll dans la sidebar (CueList)
+      if (event.target?.closest?.('.cue-list')) return;
 
       const now = Date.now();
       if (now - lastWheelRef.current < WHEEL_THROTTLE_MS) return;
