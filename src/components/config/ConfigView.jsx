@@ -41,7 +41,7 @@ export default function ConfigView() {
       pictogram: '',
       audioFile: '',
     };
-    dispatch({ type: 'ADD_CUE', payload: newCue });
+    dispatch({ type: 'ADD_CUE', payload: { ...newCue, afterId: selectedId } });
     setSelectedId(newCue.id);
   }
 
@@ -53,7 +53,7 @@ export default function ConfigView() {
       description: '',
       watchFor: '',
     };
-    dispatch({ type: 'ADD_CUE', payload: newCue });
+    dispatch({ type: 'ADD_CUE', payload: { ...newCue, afterId: selectedId } });
     setSelectedId(newCue.id);
   }
 

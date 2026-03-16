@@ -93,10 +93,17 @@ export function appReducer(state, action) {
     }
 
     case 'ADD_CUE': {
-      const newCue = action.payload;
+      const { afterId, ...newCue } = action.payload;
+      const cues = [...state.cues];
+      const afterIndex = afterId ? cues.findIndex(c => c.id === afterId) : -1;
+      if (afterIndex >= 0) {
+        cues.splice(afterIndex + 1, 0, newCue);
+      } else {
+        cues.push(newCue);
+      }
       return {
         ...state,
-        cues: [...state.cues, newCue],
+        cues,
         configDirty: true,
       };
     }
