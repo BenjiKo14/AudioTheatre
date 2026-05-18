@@ -48,7 +48,7 @@ async function readAndDecode(filePath) {
  *   trimEnd    {number}   fin en secondes   (null = durée totale)
  *   onChange   {Function} appelé avec { trimStart, trimEnd } à chaque changement
  */
-export default function AudioTrimmer({ audioFile, trimStart, trimEnd, onChange }) {
+export default function AudioTrimmer({ audioFile, trimStart, trimEnd, volume, fadeIn, fadeOut, onChange }) {
   const [duration, setDuration] = useState(null);
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState(0);
@@ -70,6 +70,7 @@ export default function AudioTrimmer({ audioFile, trimStart, trimEnd, onChange }
   const audioCtxRef = useRef(null);
   const audioBufferRef = useRef(null);
   const previewNodeRef = useRef(null);
+  const previewGainRef = useRef(null);
   const previewStartCtxTimeRef = useRef(null);
   const previewIntervalRef = useRef(null);
 
@@ -146,7 +147,11 @@ export default function AudioTrimmer({ audioFile, trimStart, trimEnd, onChange }
     if (callStop && previewNodeRef.current) {
       try { previewNodeRef.current.stop(); } catch { /* déjà arrêté */ }
     }
+    if (previewGainRef.current) {
+      try { previewGainRef.current.disconnect(); } catch { /* ignore */ }
+    }
     previewNodeRef.current = null;
+    previewGainRef.current = null;
     clearInterval(previewIntervalRef.current);
     previewIntervalRef.current = null;
     setPlaying(false);
@@ -168,9 +173,31 @@ export default function AudioTrimmer({ audioFile, trimStart, trimEnd, onChange }
 
     const node = ctx.createBufferSource();
     node.buffer = buffer;
-    node.connect(ctx.destination);
+
+    // Volume + fade via GainNode
+    const vol = volume ?? 1;
+    const fi = fadeIn ?? 0;
+    const fo = fadeOut ?? 0;
+    const gainNode = ctx.createGain();
+    node.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    const now = ctx.currentTime;
+
+    if (fi > 0 && fi < playDuration) {
+      gainNode.gain.setValueAtTime(0, now);
+      gainNode.gain.linearRampToValueAtTime(vol, now + fi);
+    } else {
+      gainNode.gain.setValueAtTime(vol, now);
+    }
+
+    if (fo > 0 && fo < playDuration) {
+      gainNode.gain.setValueAtTime(vol, now + playDuration - fo);
+      gainNode.gain.linearRampToValueAtTime(0, now + playDuration);
+    }
+
     previewNodeRef.current = node;
-    previewStartCtxTimeRef.current = ctx.currentTime;
+    previewGainRef.current = gainNode;
+    previewStartCtxTimeRef.current = now;
 
     node.onended = () => stopPreview(false);
 

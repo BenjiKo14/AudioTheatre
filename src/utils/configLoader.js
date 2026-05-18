@@ -63,6 +63,9 @@ export async function writeConfig(cues) {
   const cleanCues = cues.map(({ audioMissing: _, ...cue }) => {
     if (cue.trimStart == null) delete cue.trimStart;
     if (cue.trimEnd == null) delete cue.trimEnd;
+    if (cue.volume == null) delete cue.volume;
+    if (cue.fadeIn == null) delete cue.fadeIn;
+    if (cue.fadeOut == null) delete cue.fadeOut;
     return cue;
   });
 

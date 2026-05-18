@@ -45,3 +45,6 @@ _bmad-output/
 infos.txt
 Userskofb*
 .code-workflow/
+
+# Local runtime config (user-specific absolute paths)
+src-tauri/config.json

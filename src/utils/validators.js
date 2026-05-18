@@ -49,6 +49,15 @@ export function validateConfig(config) {
     if (cue.trimEnd != null && (typeof cue.trimEnd !== 'number' || cue.trimEnd < 0)) {
       errors.push(`cues[${index}]: "trimEnd" doit être un nombre positif`);
     }
+    if (cue.volume != null && (typeof cue.volume !== 'number' || cue.volume < 0 || cue.volume > 1)) {
+      errors.push(`cues[${index}]: "volume" doit être un nombre entre 0 et 1`);
+    }
+    if (cue.fadeIn != null && (typeof cue.fadeIn !== 'number' || cue.fadeIn < 0)) {
+      errors.push(`cues[${index}]: "fadeIn" doit être un nombre positif`);
+    }
+    if (cue.fadeOut != null && (typeof cue.fadeOut !== 'number' || cue.fadeOut < 0)) {
+      errors.push(`cues[${index}]: "fadeOut" doit être un nombre positif`);
+    }
   });
 
   return { valid: errors.length === 0, errors };

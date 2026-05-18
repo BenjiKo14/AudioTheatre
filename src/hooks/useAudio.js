@@ -142,7 +142,6 @@ export function useAudio(cues, dispatch) {
     const ctx = getAudioContext();
     const node = ctx.createBufferSource();
     node.buffer = buffer;
-    node.connect(ctx.destination);
 
     // Récupère le trim du cue (trimStart/trimEnd en secondes)
     const cue = cuesRef.current.find(c => c.id === id);
@@ -151,8 +150,31 @@ export function useAudio(cues, dispatch) {
     const playDuration = trimEnd != null ? trimEnd - offset : buffer.duration - offset;
     const startTime = ctx.currentTime;
 
+    // Volume + fade via GainNode
+    const vol = cue?.volume ?? 1;
+    const fadeIn = cue?.fadeIn ?? 0;
+    const fadeOut = cue?.fadeOut ?? 0;
+
+    const gainNode = ctx.createGain();
+    node.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    if (fadeIn > 0 && fadeIn < playDuration) {
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(vol, startTime + fadeIn);
+    } else {
+      gainNode.gain.setValueAtTime(vol, startTime);
+    }
+
+    if (fadeOut > 0 && fadeOut < playDuration) {
+      const fadeOutStart = startTime + playDuration - fadeOut;
+      gainNode.gain.setValueAtTime(vol, fadeOutStart);
+      gainNode.gain.linearRampToValueAtTime(0, startTime + playDuration);
+    }
+
     // Cleanup automatique à la fin (NFR5 — pas de fuite mémoire)
     node.onended = () => {
+      gainNode.disconnect();
       const list = activeNodes.current.get(id);
       if (list) {
         const filtered = list.filter(item => item.node !== node);
@@ -167,7 +189,7 @@ export function useAudio(cues, dispatch) {
 
     // Ajouter à la liste des nodes actifs pour ce cue
     const existing = activeNodes.current.get(id) ?? [];
-    activeNodes.current.set(id, [...existing, { node, startTime, playDuration }]);
+    activeNodes.current.set(id, [...existing, { node, gainNode, startTime, playDuration }]);
 
     // start(when, offset, duration) — lecture depuis trimStart jusqu'à trimEnd
     node.start(0, offset, playDuration);
@@ -181,8 +203,9 @@ export function useAudio(cues, dispatch) {
     const list = activeNodes.current.get(id);
     if (!list || list.length === 0) return;
 
-    list.forEach(({ node }) => {
+    list.forEach(({ node, gainNode }) => {
       try { node.stop(); } catch { /* ignore si déjà arrêté */ }
+      try { gainNode?.disconnect(); } catch { /* ignore */ }
     });
     activeNodes.current.delete(id);
   }, []);
@@ -192,8 +215,9 @@ export function useAudio(cues, dispatch) {
    */
   const stopAll = useCallback(() => {
     activeNodes.current.forEach((list) => {
-      list.forEach(({ node }) => {
+      list.forEach(({ node, gainNode }) => {
         try { node.stop(); } catch { /* ignore */ }
+        try { gainNode?.disconnect(); } catch { /* ignore */ }
       });
     });
     activeNodes.current.clear();

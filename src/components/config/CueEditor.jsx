@@ -24,6 +24,9 @@ export default function CueEditor({ cue, onUpdated, onDeleted }) {
   const [audioFile, setAudioFile] = useState(cue.audioFile ?? '');
   const [trimStart, setTrimStart] = useState(cue.trimStart ?? null);
   const [trimEnd, setTrimEnd] = useState(cue.trimEnd ?? null);
+  const [volume, setVolume] = useState(cue.volume ?? 1);
+  const [fadeIn, setFadeIn] = useState(cue.fadeIn ?? 0);
+  const [fadeOut, setFadeOut] = useState(cue.fadeOut ?? 0);
   const [showPicker, setShowPicker] = useState(false);
   const [saved, setSaved] = useState(false);
   const [soundsList, setSoundsList] = useState([]); // 'sounds/intro.mp3', ...
@@ -55,7 +58,12 @@ export default function CueEditor({ cue, onUpdated, onDeleted }) {
     if (!canSave) return;
     dispatch({
       type: 'UPDATE_CUE',
-      payload: { ...cue, title: title.trim(), note, pictogram, audioFile, trimStart, trimEnd },
+      payload: {
+        ...cue, title: title.trim(), note, pictogram, audioFile, trimStart, trimEnd,
+        volume: volume !== 1 ? volume : null,
+        fadeIn: fadeIn > 0 ? fadeIn : null,
+        fadeOut: fadeOut > 0 ? fadeOut : null,
+      },
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
@@ -219,11 +227,69 @@ export default function CueEditor({ cue, onUpdated, onDeleted }) {
             audioFile={audioFile}
             trimStart={trimStart}
             trimEnd={trimEnd}
+            volume={volume}
+            fadeIn={fadeIn}
+            fadeOut={fadeOut}
             onChange={({ trimStart: s, trimEnd: e }) => {
               setTrimStart(s);
               setTrimEnd(e);
             }}
           />
+        )}
+
+        {/* Volume */}
+        {audioFile && (
+          <div className="cue-editor__field">
+            <label className="cue-editor__label" htmlFor="cue-volume">
+              Volume — {Math.round(volume * 100)}%
+            </label>
+            <input
+              id="cue-volume"
+              className="cue-editor__range"
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={volume}
+              onChange={e => setVolume(parseFloat(e.target.value))}
+            />
+          </div>
+        )}
+
+        {/* Fondus */}
+        {audioFile && (
+          <div className="cue-editor__fade-row">
+            <div className="cue-editor__field cue-editor__field--half">
+              <label className="cue-editor__label" htmlFor="cue-fade-in">
+                Fondu d'entrée (s)
+              </label>
+              <input
+                id="cue-fade-in"
+                className="cue-editor__input"
+                type="number"
+                min="0"
+                max="30"
+                step="0.5"
+                value={fadeIn}
+                onChange={e => setFadeIn(Math.max(0, parseFloat(e.target.value) || 0))}
+              />
+            </div>
+            <div className="cue-editor__field cue-editor__field--half">
+              <label className="cue-editor__label" htmlFor="cue-fade-out">
+                Fondu de sortie (s)
+              </label>
+              <input
+                id="cue-fade-out"
+                className="cue-editor__input"
+                type="number"
+                min="0"
+                max="30"
+                step="0.5"
+                value={fadeOut}
+                onChange={e => setFadeOut(Math.max(0, parseFloat(e.target.value) || 0))}
+              />
+            </div>
+          </div>
         )}
       </div>
 
